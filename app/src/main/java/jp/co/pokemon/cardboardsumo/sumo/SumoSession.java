@@ -15,6 +15,8 @@ public class SumoSession {
     private boolean timeStatus = false;
     private boolean infoStatus = false;
 
+    public int batteryPercentage = -1;
+
     private BlockingQueue<Response> responseQueue;
 
     public final Move move = new Move();

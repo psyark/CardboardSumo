@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.vrtoolkit.cardboard.CardboardActivity;
 import com.google.vrtoolkit.cardboard.CardboardView;
@@ -32,8 +33,6 @@ public class FullscreenActivity extends CardboardActivity implements CardboardVi
 
     private final String SUMO_ADDR = "192.168.2.1";
     private SumoClient sumoClient;
-    private ImageView imageView1;
-    private ImageView imageView2;
     private Bitmap prevBitmap = null;
 
     private AudioManager audioManager;
@@ -53,8 +52,10 @@ public class FullscreenActivity extends CardboardActivity implements CardboardVi
         cardboardView.setRenderer(this);
         setCardboardView(cardboardView);
 
-        imageView1 = (ImageView)findViewById(R.id.image_view1);
-        imageView2 = (ImageView)findViewById(R.id.image_view2);
+        final ImageView imageView1 = (ImageView)findViewById(R.id.image_view1);
+        final ImageView imageView2 = (ImageView)findViewById(R.id.image_view2);
+        final TextView textView1 = (TextView)findViewById(R.id.text_view1);
+        final TextView textView2 = (TextView)findViewById(R.id.text_view2);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
 
@@ -66,6 +67,10 @@ public class FullscreenActivity extends CardboardActivity implements CardboardVi
                     public void run() {
                         imageView1.setImageBitmap(bitmap);
                         imageView2.setImageBitmap(bitmap);
+                        if (sumoClient.session.batteryPercentage >= 0) {
+                            textView1.setText(String.format("%d%%", sumoClient.session.batteryPercentage));
+                            textView2.setText(String.format("%d%%", sumoClient.session.batteryPercentage));
+                        }
                     }
                 });
 //                    if (prevBitmap != null) {

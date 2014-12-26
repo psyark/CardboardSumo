@@ -162,7 +162,11 @@ public class SumoInitializeThread implements Runnable {
                                 session.setInfoStatus();
                             }
                         } else if (ioc_type == 5) {
-                            if (ioc_func == 4) {
+                            if (ioc_func == 1) {
+                                byte level = bb.get();
+                                session.batteryPercentage = level;
+                                Log.i(TAG, String.format("IOCTL:BATTERY(%d)", level));
+                            } else if (ioc_func == 4) {
                                 Log.i(TAG, "IOCTL:INFO:DATE");
                                 session.setDateStatus();
                             } else if (ioc_func == 5) {

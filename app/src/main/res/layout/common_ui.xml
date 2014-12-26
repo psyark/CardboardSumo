@@ -16,17 +16,37 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.widget.ImageView
-            android:id="@+id/image_view1"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true" />
-        <android.widget.ImageView
-            android:id="@+id/image_view2"
+            android:layout_height="match_parent">
+            <android.widget.ImageView
+                android:id="@+id/image_view1"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"/>
+            <TextView
+                android:id="@+id/text_view1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="bbb"
+                android:textColor="#FFFFFF"
+                android:textAlignment="center"
+                android:gravity="center"/>
+        </FrameLayout>
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true" />
+            android:layout_height="match_parent">
+            <android.widget.ImageView
+                android:id="@+id/image_view2"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"/>
+            <TextView
+                android:id="@+id/text_view2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="aaa"
+                android:textColor="#FFFFFF"
+                android:textAlignment="center"
+                android:gravity="center"/>
+        </FrameLayout>
     </LinearLayout>
 </RelativeLayout>

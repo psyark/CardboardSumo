@@ -28,9 +28,18 @@
                 android:id="@+id/text_view1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="#FFFFFF"
+                android:textColor="#33FFFFFF"
                 android:textAlignment="center"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:text="offline"
+                android:textSize="80px"
+                android:textStyle="bold"
+                android:layout_marginTop="330px"
+                android:layout_marginLeft="30px"
+                android:shadowColor="#000000"
+                android:shadowDx="0"
+                android:shadowDy="1"
+                android:shadowRadius="1"/>
         </FrameLayout>
         <FrameLayout
             android:layout_width="wrap_content"
@@ -44,9 +53,18 @@
                 android:id="@+id/text_view2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="#FFFFFF"
+                android:textColor="#33FFFFFF"
                 android:textAlignment="center"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:text="offline"
+                android:textSize="80px"
+                android:textStyle="bold"
+                android:layout_marginTop="330px"
+                android:layout_marginRight="30px"
+                android:shadowColor="#000000"
+                android:shadowDx="0"
+                android:shadowDy="1"
+                android:shadowRadius="1"/>
         </FrameLayout>
     </LinearLayout>
 </RelativeLayout>

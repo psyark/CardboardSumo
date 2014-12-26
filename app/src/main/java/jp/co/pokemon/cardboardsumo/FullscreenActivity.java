@@ -149,6 +149,11 @@ public class FullscreenActivity extends CardboardActivity implements CardboardVi
             Log.i(TAG, String.format("volume: %f", volume));
             int runSpeed = (int)(127 * (0.2 + volume * 0.8));
 
+            // 下を向いていたらバック
+            if (currentPitch < -0.3) {
+                runSpeed *= -1;
+            }
+
             running = !running;
             synchronized (sumoClient.session.move) {
                 sumoClient.session.move.speed = (byte) (running ? runSpeed : 0);

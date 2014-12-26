@@ -22,12 +22,12 @@
             <android.widget.ImageView
                 android:id="@+id/image_view1"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"/>
+                android:layout_height="fill_parent"
+                android:src="@drawable/offline" />
             <TextView
                 android:id="@+id/text_view1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="bbb"
                 android:textColor="#FFFFFF"
                 android:textAlignment="center"
                 android:gravity="center"/>
@@ -38,12 +38,12 @@
             <android.widget.ImageView
                 android:id="@+id/image_view2"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"/>
+                android:layout_height="fill_parent"
+                android:src="@drawable/offline" />
             <TextView
                 android:id="@+id/text_view2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="aaa"
                 android:textColor="#FFFFFF"
                 android:textAlignment="center"
                 android:gravity="center"/>

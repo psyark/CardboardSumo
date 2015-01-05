@@ -1,9 +1,7 @@
 package jp.co.pokemon.cardboardsumo;
 
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -33,9 +31,7 @@ public class FullscreenActivity extends CardboardActivity implements CardboardVi
 
     private final String SUMO_ADDR = "192.168.2.1";
     private SumoClient sumoClient;
-    private Bitmap prevBitmap = null;
 
-    private AudioManager audioManager;
     private boolean running = false;
     private boolean attitudeInitialized = false;
     private float currentYaw;
@@ -44,8 +40,6 @@ public class FullscreenActivity extends CardboardActivity implements CardboardVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
         setContentView(R.layout.common_ui);
         CardboardView cardboardView = (CardboardView)findViewById(R.id.cardboard_view);
@@ -73,63 +67,69 @@ public class FullscreenActivity extends CardboardActivity implements CardboardVi
                         }
                     }
                 });
-//                    if (prevBitmap != null) {
-//                        prevBitmap.recycle();
-//                        prevBitmap = null;
-//                    }
-//                    prevBitmap = bitmap;
             }
         });
     }
 
     @Override
     public void onDrawFrame(HeadTransform headTransform, Eye eye, Eye eye1) {
-        float[] forward = new float[3];
-        float[] right = new float[3];
+        float[] quaternion = new float[4];
+        headTransform.getQuaternion(quaternion, 0);
 
-        headTransform.getForwardVector(forward, 0);
-        headTransform.getRightVector(right, 0);
-//        Log.v(TAG, String.format("onNewFrame %f, %f, %f", forward[0], forward[1], forward[2]));
+        float x = quaternion[0];
+        float y = quaternion[1];
+        float z = quaternion[2];
+        float w = quaternion[3];
+        float roll  = (float)Math.atan2(2*y*w - 2*x*z, 1 - 2*y*y - 2*z*z);
+        float pitch = (float)Math.atan2(2*x*w - 2*y*z, 1 - 2*x*x - 2*z*z);
+        float yaw   = (float)Math.asin(2*x*y + 2*z*w);
 
-        float pitch = (float) Math.atan2(-forward[1], -forward[2]);
-        float yaw   = (float) Math.atan2(right[0], -right[2]);
-        Log.v(TAG, String.format("onNewFrame p=%f, y=%f", pitch, yaw));
+        Log.v(TAG, String.format("onNewFrame p=%f, y=%f", pitch, roll));
 
         if (!attitudeInitialized) {
             attitudeInitialized = true;
-            currentYaw = yaw;
+            currentYaw = roll;
+            currentPitch = pitch;
         }
-        float relYaw = currentYaw - yaw;
+        float relYaw = currentYaw - roll;
         float rotSpeed = Math.max(-1, Math.min(+1, relYaw * 8.0f));
-        synchronized (sumoClient.session.move) {
-            sumoClient.session.move.rotation = (byte)(rotSpeed * 127);
+        float speed;
+        if (pitch > 0) {
+            speed = Math.min(+1.0f, pitch * 2.0f);
+        } else {
+            speed = Math.max(-1.0f, pitch * 1.0f);
         }
-        currentYaw = yaw;
+        synchronized (sumoClient.session.move) {
+            if (running) {
+                sumoClient.session.move.rotation = (byte) (rotSpeed * 127);
+                sumoClient.session.move.speed = (byte) (speed * 127);
+            } else {
+                sumoClient.session.move.rotation = 0;
+                sumoClient.session.move.speed = 0;
+            }
+        }
+        currentYaw = roll;
         currentPitch = pitch;
     }
 
 
     @Override
     public void onFinishFrame(Viewport viewport) {
-
     }
 
 
     @Override
     public void onSurfaceChanged(int i, int i1) {
-
     }
 
 
     @Override
     public void onSurfaceCreated(EGLConfig eglConfig) {
-
     }
 
 
     @Override
     public void onRendererShutdown() {
-
     }
 
     /**
@@ -137,27 +137,13 @@ public class FullscreenActivity extends CardboardActivity implements CardboardVi
      */
     @Override
     public void onCardboardTrigger() {
-        Log.i(TAG, "onCardboardTrigger");
-        Log.i(TAG, String.format("pitch: %f", currentPitch));
+        Log.i(TAG, String.format("onCardboardTrigger pitch: %f", currentPitch));
 
         // 停止状態で上を向いていたらジャンプ
         if (!running && currentPitch > 0.5) {
             sumoClient.performJump();
         } else {
-            int streamType = AudioManager.STREAM_SYSTEM;
-            float volume = (float)audioManager.getStreamVolume(streamType) / (float)audioManager.getStreamMaxVolume(streamType);
-            Log.i(TAG, String.format("volume: %f", volume));
-            int runSpeed = (int)(127 * (0.2 + volume * 0.8));
-
-            // 下を向いていたらバック
-            if (currentPitch < -0.3) {
-                runSpeed *= -1;
-            }
-
             running = !running;
-            synchronized (sumoClient.session.move) {
-                sumoClient.session.move.speed = (byte) (running ? runSpeed : 0);
-            }
         }
     }
 }
